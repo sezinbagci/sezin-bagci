@@ -22,6 +22,12 @@ const users = [{id:1 , username: "Oktay", surname: "Giniş" ,mail: "oktay@gmail.
                     {id:9 , username: "Mert", surname: "Keleş",mail: "mert@gmail.com",tel: "052626726232",firmName:"Havelsan",firmId:127,status:"pasif",role:"yönetici",birthdate:"20/09/1972",gender:"erkek",known_language:"Türkçe,İngilizce,İspanyolca"},
                     {id:10 , username: "Duru", surname: "Dilli",mail: "duru@yahoo.com",tel: "057235262616",firmName:"Siemens",firmId:124,status:"pasif",role:"izleyici",birthdate:"17/02/1989",gender:"kadın",known_language:"İspanyolca,İngilizce"}
     ];
+  const firms = [{id:123 , firmName: "Amazon" , firmMail: "info@amazon.com",address :"440 Terry Avenue North. Seattle, WA / USA. 98109.",tel: "031215793723",current_working_person:2,firmType:"Satıcı",firmStatus:"Aktif",latitude:50.47238,longitude:98.91295},
+                    {id:124 , firmName: "Siemens" , firmMail: "info@siemens.com" ,address: "Birla Aurora, Level 21, Plot No. 1080 Dr. Annie Besant Road, Worli Mumbai Mumbai City MH IN 400030.",tel: "03129795722",current_working_person:2,firmType:"Alıcı",firmStatustatus:"Onay aşamasında",latitude:45.80410,longitude:5.23837},
+                    {id:125 , firmName: "Sigun" , firmMail: "info@sigun.com.tr", address: "Üniversiteler Mahallesi, ODTÜ Teknokent Silikon Blok BK-16, 06800 Çankaya/Ankara",tel:"03122270564",current_working_person:2,firmType:"Satıcı",firmStatus:"Aktif",latitude:39.900143939375766,longitude:32.773717893715386},
+                    {id:126 , firmName: "Meta" , firmMail: "info@meta.com", address: "1 Hacker Way, Menlo Park, CA 94025, US - MapQuest.",tel: "O3124971512",current_working_person:2,firmType:"Aracı",firmStatus:"Pasif",latitude:53.46373,longitude:45.97945},
+                    {id:127 ,firmName: "Havelsan", firmMail: "info@havelsan.com" , address: "Mustafa Kemal, Şht. Öğretmen Şenay Aybüke Yalçın Cd. No:39, 06510 Çankaya/Ankara",tel:"03122927400",current_working_person:2,firmType:"Alıcı",firmStatus:"Bilgi bekleniyor",latitude:39.91372058783552,longitude:32.77577256210086},
+   ];
 
 app.get("/", (request, response) => {
     response.status(201).send({msg: "Hello"});
@@ -59,13 +65,18 @@ app.post('/api/users' , (request,response) =>  {
     return response.status(201).send(newUser);
 })
 app.get('/api/firms',(request,response) =>{
-    response.send([{id:123 , firmName: "Amazon" , firmMail: "info@amazon.com",address :"440 Terry Avenue North. Seattle, WA / USA. 98109.",tel: "031215793723",current_working_person:2,firmType:"Satıcı",firmStatus:"Aktif",latitude:50.47238,longitude:98.91295},
-                    {id:124 , firmName: "Siemens" , firmMail: "info@siemens.com" ,address: "Birla Aurora, Level 21, Plot No. 1080 Dr. Annie Besant Road, Worli Mumbai Mumbai City MH IN 400030.",tel: "03129795722",current_working_person:2,firmType:"Alıcı",firmStatustatus:"Onay aşamasında",latitude:45.80410,longitude:5.23837},
-                    {id:125 , firmName: "Sigun" , firmMail: "info@sigun.com.tr", address: "Üniversiteler Mahallesi, ODTÜ Teknokent Silikon Blok BK-16, 06800 Çankaya/Ankara",tel:"03122270564",current_working_person:2,firmType:"Satıcı",firmStatus:"Aktif",latitude:39.900143939375766,longitude:32.773717893715386},
-                    {id:126 , firmName: "Meta" , firmMail: "info@meta.com", address: "1 Hacker Way, Menlo Park, CA 94025, US - MapQuest.",tel: "O3124971512",current_working_person:2,firmType:"Aracı",firmStatus:"Pasif",latitude:53.46373,longitude:45.97945},
-                    {id:127 ,firmName: "Havelsan", firmMail: "info@havelsan.com" , address: "Mustafa Kemal, Şht. Öğretmen Şenay Aybüke Yalçın Cd. No:39, 06510 Çankaya/Ankara",tel:"03122927400",current_working_person:2,firmType:"Alıcı",firmStatus:"Bilgi bekleniyor",latitude:39.91372058783552,longitude:32.77577256210086},
-    ])
+    response.send(firms);
 });
+
+app.get('/api/firms/:id', (request,response) => {
+    const parsedId = parseInt(request.params.id);
+    if(isNaN(parsedId))
+        return response.status(400).send({msg: "Bad Request. Invalid ID!"});
+
+    const findFirm = firms.find((firm) => firm.id === parsedId);
+    if(!findFirm) return response.sendStatus(404);
+    return response.send(findFirm);
+})
 
 app.put('/api/users/:id' , (request,response) => {
     const {
